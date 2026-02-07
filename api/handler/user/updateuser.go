@@ -1,10 +1,11 @@
-package ehandler
+package ehandleruser
 
 import (
 	"context"
 	"database/sql"
 	"net/http"
 
+	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/internal/validate"
 	"github.com/krakn/expense-management-backend-go/storage"
@@ -83,6 +84,6 @@ func UpdateUser(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string
 		logger.Debug("User updated")
 		
 		// return the user
-		WriteJSON(w, http.StatusOK, data.(entity.User))
+		ehandler.WriteJSON(w, http.StatusOK, data.(entity.User))
 	})
 }

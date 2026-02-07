@@ -1,4 +1,4 @@
-package ehandler
+package ehandleruser
 
 import "golang.org/x/crypto/bcrypt"
 

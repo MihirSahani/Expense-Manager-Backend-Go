@@ -1,10 +1,11 @@
-package ehandler
+package ehandleruser
 
 import (
 	"context"
 	"database/sql"
 	"net/http"
 
+	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/internal/authenticator"
 	"github.com/krakn/expense-management-backend-go/internal/validate"
@@ -62,7 +63,7 @@ func Login(logger elogger.Logger, s *storage.Storage, a authenticator.Authentica
 		}
 		logger.Debug("Token generated")
 
-		WriteJSON(w, http.StatusOK, map[string]string{
+		ehandler.WriteJSON(w, http.StatusOK, map[string]string{
 			"token": token,
 		})
 	})

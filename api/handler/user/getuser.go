@@ -1,4 +1,4 @@
-package ehandler
+package ehandleruser
 
 import (
 	"context"
@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi"
+	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/storage"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
@@ -47,6 +48,6 @@ func GetuserByID(logger elogger.Logger, s *storage.Storage) http.HandlerFunc {
 		logger.Debug("Fetched user from database", zap.Any("user", user))
 
 		// return user info
-		WriteJSON(w, http.StatusOK, user)
+		ehandler.WriteJSON(w, http.StatusOK, user)
 	})
 }
