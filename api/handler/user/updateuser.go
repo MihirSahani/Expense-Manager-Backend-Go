@@ -21,7 +21,7 @@ func UpdateUser(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string
 			LastName  *string `json:"last_name"`
 			Password  *string `json:"password"`
 		}
-		err := ReadJSON(r, &payload)
+		err := ehandler.ReadJSON(r, &payload)
 		if err != nil {
 			logger.Warn(err.Error())
 			http.Error(w, err.Error(), http.StatusBadRequest)

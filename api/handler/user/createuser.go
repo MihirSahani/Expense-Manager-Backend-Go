@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/internal/validate"
 	"github.com/krakn/expense-management-backend-go/storage"
@@ -20,7 +21,7 @@ func CreateUser(logger elogger.Logger, s *storage.Storage) http.HandlerFunc {
 			LastName  string `json:"last_name"`
 			Password  string `json:"password" validate:"required,min=8"`
 		}
-		err := ReadJSON(r, &payload)
+		err := ehandler.ReadJSON(r, &payload)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			logger.Warn(err.Error())
@@ -70,7 +71,7 @@ func CreateUser(logger elogger.Logger, s *storage.Storage) http.HandlerFunc {
 
 
 		// return the user
-		WriteJSON(w, http.StatusCreated, map[string]int64{
+		ehandler.WriteJSON(w, http.StatusCreated, map[string]int64{
 			"id": data.(int64),
 		})
 	})

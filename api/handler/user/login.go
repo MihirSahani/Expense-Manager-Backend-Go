@@ -21,7 +21,7 @@ func Login(logger elogger.Logger, s *storage.Storage, a authenticator.Authentica
 			Password string `json:"password"`
 		}
 
-		err := ReadJSON(r, &payload)
+		err := ehandler.ReadJSON(r, &payload)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
