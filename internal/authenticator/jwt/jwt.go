@@ -1,21 +1,13 @@
-package jwt
+package ejwt
 
 import (
 	"fmt"
 	"time"
-
 	"github.com/golang-jwt/jwt/v5"
 )
 
 type JWTAuthenticator struct {
 	config *JWTConfig
-
-}
-
-func NewJWTAuthenticator() *JWTAuthenticator {
-	return &JWTAuthenticator{
-		config: LoadAuthConfig(),
-	}
 }
 
 func (j *JWTAuthenticator) GenerateToken(userId int64) (tokenString string, err error) {
@@ -35,10 +27,10 @@ func (j *JWTAuthenticator) GenerateToken(userId int64) (tokenString string, err 
 	return tokenString, nil
 }
 
-func (j *JWTAuthenticator) ValidateToken(encryptedToken string) (int64, error) {	
+func (j *JWTAuthenticator) ValidateToken(encryptedToken string) (int64, error) {
 	token, err := jwt.Parse(
-		encryptedToken, 
-		func (token *jwt.Token) (any, error) {
+		encryptedToken,
+		func(token *jwt.Token) (any, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
@@ -51,10 +43,10 @@ func (j *JWTAuthenticator) ValidateToken(encryptedToken string) (int64, error) {
 	)
 	if err != nil {
 		switch err {
-			case jwt.ErrTokenExpired:
-				return 0, fmt.Errorf("token expired")
-			default:
-				return 0, fmt.Errorf("invalid token")
+		case jwt.ErrTokenExpired:
+			return 0, fmt.Errorf("token expired")
+		default:
+			return 0, fmt.Errorf("invalid token")
 		}
 	}
 
@@ -66,5 +58,11 @@ func (j *JWTAuthenticator) ValidateToken(encryptedToken string) (int64, error) {
 		return int64(userId), nil
 	} else {
 		return 0, fmt.Errorf("invalid token")
+	}
+}
+
+func NewJWTAuthenticator() *JWTAuthenticator {
+	return &JWTAuthenticator{
+		config: LoadAuthConfig(),
 	}
 }

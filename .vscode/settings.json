@@ -1,0 +1,15 @@
+{
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "Expense Managment",
+            "database": "expense_management_db",
+            "username": "server",
+            "password": "tD860m3WA2gSrv7r7Jrng7cMQTYeUyskHCAHCsuS"
+        }
+    ]
+}

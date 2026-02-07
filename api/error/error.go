@@ -1,9 +1,10 @@
-package errors
+package eerror
 
-import "errors"
+import (
+	"errors"
+)
 
 var (
 	MissingAuthenticationError = errors.New("missing authentication")
 	InvalidAuthenticationError = errors.New("invalid authentication")
 )
-

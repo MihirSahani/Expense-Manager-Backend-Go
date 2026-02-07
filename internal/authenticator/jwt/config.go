@@ -1,4 +1,4 @@
-package jwt
+package ejwt
 
 import (
 	"time"
@@ -15,8 +15,8 @@ type JWTConfig struct {
 func LoadAuthConfig() *JWTConfig {
 	return &JWTConfig{
 		SecretKey: []byte(utils.GetEnv("JWT_SECRET_KEY", "secretkey")),
-		Issuer:    "Project-27",
-		Audience:  "Project-27-Users",
+		Issuer:    utils.GetEnv("ISSUER", "expense-management"),
+		Audience:  utils.GetEnv("AUDIENCE", "expense-management-users"),
 		DefaultExpiryHours: 72 * time.Hour,
 	}
 }
