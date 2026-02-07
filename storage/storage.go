@@ -5,6 +5,7 @@ import (
 	"database/sql"
 
 	"github.com/krakn/expense-management-backend-go/storage/entity"
+	"github.com/krakn/expense-management-backend-go/storage/postgres/user"
 	"github.com/krakn/expense-management-backend-go/storage/postgres"
 )
 
@@ -21,6 +22,14 @@ type Storage struct {
 		UpdateUser(context.Context, *sql.Tx, entity.User) error
 		DeleteUser(context.Context, *sql.Tx, int64) error
 	}
+
+	Category interface {
+		CreateCategory(context.Context, *sql.Tx, entity.Category) (int64, error)
+		GetCategoryByID(context.Context, *sql.Tx) (entity.Category, error)
+		GetAllCategories(context.Context, *sql.Tx) ([]entity.Category, error)
+		UpdateCategory(context.Context, *sql.Tx, entity.Category) error
+		DeleteCategory(context.Context, *sql.Tx) error
+	}
 }
 
 func NewStorage() *Storage {
@@ -31,7 +40,7 @@ func NewStorage() *Storage {
 
 	return &Storage{
 		Connection: conn,
-		User:       postgres.NewPostgresUserStorage(),
+		User:       postgres_user.NewPostgresUserStorage(),
 	}
 }
 

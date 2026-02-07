@@ -64,7 +64,7 @@ func CreateUser(logger elogger.Logger, s *storage.Storage) http.HandlerFunc {
 		})
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			w.WriteHeader(http.StatusForbidden)
 			return
 		}
 		logger.Debug("User created")
