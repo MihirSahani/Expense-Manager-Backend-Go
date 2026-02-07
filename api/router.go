@@ -4,6 +4,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
+	ehandleruser "github.com/krakn/expense-management-backend-go/api/handler/user"
 	emiddleware "github.com/krakn/expense-management-backend-go/api/middleware"
 )
 
@@ -20,16 +21,16 @@ func (a *application) getRouter() *chi.Mux {
 		router.Get("/health", ehandler.Health(a.config.Version, a.config.Environment))
 
 		router.Route("/user", func(router chi.Router) {
-			router.Post("/login", ehandler.Login(a.logger, a.storage, a.authenticator))
+			router.Post("/login", ehandleruser.Login(a.logger, a.storage, a.authenticator))
 
-			router.Post("/", ehandler.CreateUser(a.logger, a.storage))
+			router.Post("/", ehandleruser.CreateUser(a.logger, a.storage))
 
 			router.Group(func(router chi.Router) {
 				router.Use(emiddleware.Authenticate(a.authenticator, a.logger, LOGGED_IN_USER_ID))
 
-				router.Get("/{id}", ehandler.GetuserByID(a.logger, a.storage))
-				router.Put("/", ehandler.UpdateUser(a.logger, a.storage, LOGGED_IN_USER_ID))
-				router.Delete("/{id}", ehandler.DeleteUser(a.logger, a.storage, LOGGED_IN_USER_ID))
+				router.Get("/{id}", ehandleruser.GetuserByID(a.logger, a.storage))
+				router.Put("/", ehandleruser.UpdateUser(a.logger, a.storage, LOGGED_IN_USER_ID))
+				router.Delete("/{id}", ehandleruser.DeleteUser(a.logger, a.storage, LOGGED_IN_USER_ID))
 			})
 		})
 
