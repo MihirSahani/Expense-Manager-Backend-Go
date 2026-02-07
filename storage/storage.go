@@ -24,10 +24,10 @@ type Storage struct {
 	}
 
 	Category interface {
-		CreateCategory(context.Context, *sql.Tx, entity.Category) (int64, error)
-		GetCategoryByID(context.Context, *sql.Tx) (entity.Category, error)
-		GetAllCategories(context.Context, *sql.Tx) ([]entity.Category, error)
-		UpdateCategory(context.Context, *sql.Tx, entity.Category) error
+		CreateCategory(context.Context, *sql.Tx, *entity.Category) (int64, error)
+		GetCategoryByID(context.Context, *sql.Tx) (*entity.Category, error)
+		GetAllCategories(context.Context, *sql.Tx, int64) (*[]entity.Category, error)
+		UpdateCategory(context.Context, *sql.Tx, *entity.Category) error
 		DeleteCategory(context.Context, *sql.Tx) error
 	}
 }
