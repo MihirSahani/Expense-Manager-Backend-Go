@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/krakn/expense-management-backend-go/api/error"
-	"github.com/krakn/expense-management-backend-go/api/handler"
 	"github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/internal/authenticator"
 )
@@ -17,7 +16,7 @@ func Authenticate(authenticator authenticator.Authenticator, logger elogger.Logg
 			token, err := getTokenFromHeader(r)
 			if err != nil {
 				logger.Error(err.Error())
-				ehandler.WriteJSON(w, http.StatusUnauthorized, map[string]string{"error": err.Error()})
+				w.WriteHeader(http.StatusUnauthorized)
 				return
 			}
 

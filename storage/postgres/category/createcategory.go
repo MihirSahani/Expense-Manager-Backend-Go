@@ -7,9 +7,9 @@ import (
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (p *PostgresCategoryStorage) CreateCategory(ctx context.Context, tx *sql.Tx, category entity.Category) (int64, error) {
+func (p *PostgresCategoryStorage) CreateCategory(ctx context.Context, tx *sql.Tx, category *entity.Category) (int64, error) {
 	query := `
-		INSERT INTO categories (name, type, color, desc, user_id)
+		INSERT INTO categories (name, type, color, description, user_id)
 		VALUES ($1, $2, $3, $4, $5)
 		RETURNING id
 	`

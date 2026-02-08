@@ -7,14 +7,14 @@ import (
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (p *PostgresCategoryStorage) GetCategoryByID(ctx context.Context, tx *sql.Tx) (*entity.Category, error) {
+func (p *PostgresCategoryStorage) GetCategoryByID(ctx context.Context, tx *sql.Tx, categoryID int64) (*entity.Category, error) {
 	query := `
-		SELECT id, name, type, color, desc, user_id, created_at, updated_at
+		SELECT id, name, type, color, description, user_id, created_at, updated_at
 		FROM categories
 		WHERE id = $1
 	`
 	var category entity.Category
-	err := tx.QueryRowContext(ctx, query, category.Id).Scan(&category.Id, &category.Name, &category.Type, &category.Color, &category.Desc, &category.UserID, &category.CreatedAt, &category.UpdatedAt)
+	err := tx.QueryRowContext(ctx, query, categoryID).Scan(&category.Id, &category.Name, &category.Type, &category.Color, &category.Desc, &category.UserID, &category.CreatedAt, &category.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +23,7 @@ func (p *PostgresCategoryStorage) GetCategoryByID(ctx context.Context, tx *sql.T
 
 func (p *PostgresCategoryStorage) GetAllCategories(ctx context.Context, tx *sql.Tx, userID int64) (*[]entity.Category, error) {
 	query := `
-		SELECT id, name, type, color, desc, user_id, created_at, updated_at
+		SELECT id, name, type, color, description, user_id, created_at, updated_at
 		FROM categories
 		WHERE user_id = $1
 	`
