@@ -7,6 +7,7 @@ import (
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 	"github.com/krakn/expense-management-backend-go/storage/postgres/user"
 	"github.com/krakn/expense-management-backend-go/storage/postgres/category"
+	"github.com/krakn/expense-management-backend-go/storage/postgres/account"
 	"github.com/krakn/expense-management-backend-go/storage/postgres"
 )
 
@@ -26,10 +27,18 @@ type Storage struct {
 
 	Category interface {
 		CreateCategory(context.Context, *sql.Tx, *entity.Category) (int64, error)
-		GetCategoryByID(context.Context, *sql.Tx, int64) (*entity.Category, error)
+		GetCategoryByID(context.Context, *sql.Tx, int64, int64) (*entity.Category, error)
 		GetAllCategories(context.Context, *sql.Tx, int64) (*[]entity.Category, error)
-		UpdateCategory(context.Context, *sql.Tx, *entity.Category) error
-		DeleteCategory(context.Context, *sql.Tx, int64) error
+		UpdateCategory(context.Context, *sql.Tx, *entity.Category, int64) error
+		DeleteCategory(context.Context, *sql.Tx, int64, int64) error
+	}
+
+	Account interface {
+		CreateAccount(context.Context, *sql.Tx, *entity.Account) (int64, error)
+		GetAccountByID(context.Context, *sql.Tx, int64, int64) (*entity.Account, error)
+		GetAllAccounts(context.Context, *sql.Tx, int64) (*[]entity.Account, error)
+		UpdateAccount(context.Context, *sql.Tx, *entity.Account, int64) error
+		DeleteAccount(context.Context, *sql.Tx, int64, int64) error
 	}
 }
 
@@ -43,6 +52,7 @@ func NewStorage() *Storage {
 		Connection: conn,
 		User:       postgres_user.NewPostgresUserStorage(),
 		Category:   postgres_category.NewPostgresCategoryStorage(),
+		Account:    postgres_account.NewPostgresAccountStorage(),
 	}
 }
 

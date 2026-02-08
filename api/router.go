@@ -5,6 +5,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	ehandlercategory "github.com/krakn/expense-management-backend-go/api/handler/category"
+	ehandleraccount "github.com/krakn/expense-management-backend-go/api/handler/account"
 	ehandleruser "github.com/krakn/expense-management-backend-go/api/handler/user"
 	emiddleware "github.com/krakn/expense-management-backend-go/api/middleware"
 )
@@ -39,8 +40,17 @@ func (a *application) getRouter() *chi.Mux {
 			router.Post("/", ehandlercategory.CreateCategory(a.logger, a.storage, LOGGED_IN_USER_ID))
 			router.Get("/", ehandlercategory.GetAllCategory(a.logger, a.storage, LOGGED_IN_USER_ID))
 			router.Get("/{categoryid}", ehandlercategory.GetCategoryByID(a.logger, a.storage, LOGGED_IN_USER_ID))
-			router.Put("/{categoryid}", ehandlercategory.UpdateCategory(a.logger, a.storage))
-			router.Delete("/{categoryid}", ehandlercategory.DeleteCategory(a.logger, a.storage))
+			router.Put("/{categoryid}", ehandlercategory.UpdateCategory(a.logger, a.storage, LOGGED_IN_USER_ID))
+			router.Delete("/{categoryid}", ehandlercategory.DeleteCategory(a.logger, a.storage, LOGGED_IN_USER_ID))
+		})
+		router.Route("/account", func(router chi.Router) {
+			router.Use(emiddleware.Authenticate(a.authenticator, a.logger, LOGGED_IN_USER_ID))
+
+			router.Post("/", ehandleraccount.CreateAccount(a.logger, a.storage, LOGGED_IN_USER_ID))
+			router.Get("/", ehandleraccount.GetAllAccounts(a.logger, a.storage, LOGGED_IN_USER_ID))
+			router.Get("/{id}", ehandleraccount.GetAccountByID(a.logger, a.storage, LOGGED_IN_USER_ID))
+			router.Put("/{id}", ehandleraccount.UpdateAccount(a.logger, a.storage, LOGGED_IN_USER_ID))
+			router.Delete("/{id}", ehandleraccount.DeleteAccount(a.logger, a.storage, LOGGED_IN_USER_ID))
 		})
 
 	})
