@@ -11,7 +11,7 @@ import (
 	"github.com/krakn/expense-management-backend-go/storage"
 )
 
-func DeleteCategory(logger elogger.Logger, storage *storage.Storage) http.HandlerFunc {
+func DeleteCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// get Id from URL
 		categoryId, err := strconv.ParseInt(chi.URLParam(r, "categoryid"), 10, 64)
@@ -24,7 +24,7 @@ func DeleteCategory(logger elogger.Logger, storage *storage.Storage) http.Handle
 
 		// delete from Db
 		_, err = storage.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			err := storage.Category.DeleteCategory(ctx, tx, categoryId)
+			err := storage.Category.DeleteCategory(ctx, tx, categoryId, ctx.Value(LOGGED_IN_USER).(int64))
 			if err != nil {
 				return nil, err
 			}

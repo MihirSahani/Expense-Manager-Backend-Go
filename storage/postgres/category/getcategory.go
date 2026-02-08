@@ -7,11 +7,11 @@ import (
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (p *PostgresCategoryStorage) GetCategoryByID(ctx context.Context, tx *sql.Tx, categoryID int64) (*entity.Category, error) {
+func (p *PostgresCategoryStorage) GetCategoryByID(ctx context.Context, tx *sql.Tx, categoryID int64, userID int64) (*entity.Category, error) {
 	query := `
 		SELECT id, name, type, color, description, user_id, created_at, updated_at
 		FROM categories
-		WHERE id = $1
+		WHERE id = $1 AND user_id = $2
 	`
 	var category entity.Category
 	err := tx.QueryRowContext(ctx, query, categoryID).Scan(&category.Id, &category.Name, &category.Type, &category.Color, &category.Desc, &category.UserID, &category.CreatedAt, &category.UpdatedAt)

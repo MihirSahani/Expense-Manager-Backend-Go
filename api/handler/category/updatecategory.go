@@ -15,7 +15,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func UpdateCategory(logger elogger.Logger, storage *storage.Storage) http.HandlerFunc {
+func UpdateCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// get category id from URL
 		categoryId, err := strconv.ParseInt(chi.URLParam(r, "categoryid"), 10, 64)
@@ -48,7 +48,7 @@ func UpdateCategory(logger elogger.Logger, storage *storage.Storage) http.Handle
 
 		// Read from DB
 		data, err := storage.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			category, err := storage.Category.GetCategoryByID(ctx, tx, categoryId)
+			category, err := storage.Category.GetCategoryByID(ctx, tx, categoryId, ctx.Value(LOGGED_IN_USER).(int64))
 			if err != nil {
 				return nil, err
 			}
@@ -64,7 +64,7 @@ func UpdateCategory(logger elogger.Logger, storage *storage.Storage) http.Handle
 			if payload.Color != nil {
 				category.Color = *payload.Color
 			}
-			err = storage.Category.UpdateCategory(ctx, tx, category)
+			err = storage.Category.UpdateCategory(ctx, tx, category, ctx.Value(LOGGED_IN_USER).(int64))
 			if err != nil {
 				return nil, err
 			}

@@ -47,7 +47,7 @@ func GetCategoryByID(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_
 
 		// Read from DB
 		data, err := storage.WithTransaction(r.Context(), func(ctx context.Context, db *sql.Tx) (any, error) {
-			category, err := storage.Category.GetCategoryByID(ctx, db, categoryId)
+			category, err := storage.Category.GetCategoryByID(ctx, db, categoryId, ctx.Value(LOGGED_IN_USER).(int64))
 			if err != nil {
 				return nil, err
 			}

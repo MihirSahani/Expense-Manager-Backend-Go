@@ -5,12 +5,12 @@ import (
 	"database/sql"
 )
 
-func (p *PostgresCategoryStorage) DeleteCategory(ctx context.Context, tx *sql.Tx, categoryID int64) error {
+func (p *PostgresCategoryStorage) DeleteCategory(ctx context.Context, tx *sql.Tx, categoryID int64, userID int64) error {
 	query := `
 		DELETE FROM categories
-		WHERE id = $1
+		WHERE id = $1 AND user_id = $2
 	`
-	result, err := tx.ExecContext(ctx, query, categoryID)
+	result, err := tx.ExecContext(ctx, query, categoryID, userID)
 	if err != nil {
 		return err
 	}
