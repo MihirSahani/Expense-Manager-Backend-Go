@@ -6,6 +6,7 @@ import (
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	ehandlercategory "github.com/krakn/expense-management-backend-go/api/handler/category"
 	ehandleraccount "github.com/krakn/expense-management-backend-go/api/handler/account"
+	ehandlertransaction "github.com/krakn/expense-management-backend-go/api/handler/transaction"
 	ehandleruser "github.com/krakn/expense-management-backend-go/api/handler/user"
 	emiddleware "github.com/krakn/expense-management-backend-go/api/middleware"
 )
@@ -51,6 +52,15 @@ func (a *application) getRouter() *chi.Mux {
 			router.Get("/{id}", ehandleraccount.GetAccountByID(a.logger, a.storage, LOGGED_IN_USER_ID))
 			router.Put("/{id}", ehandleraccount.UpdateAccount(a.logger, a.storage, LOGGED_IN_USER_ID))
 			router.Delete("/{id}", ehandleraccount.DeleteAccount(a.logger, a.storage, LOGGED_IN_USER_ID))
+		})
+		router.Route("/transaction", func(router chi.Router) {
+			router.Use(emiddleware.Authenticate(a.authenticator, a.logger, LOGGED_IN_USER_ID))
+
+			router.Post("/", ehandlertransaction.CreateTransaction(a.logger, a.storage, LOGGED_IN_USER_ID))
+			router.Get("/", ehandlertransaction.GetAllTransactions(a.logger, a.storage, LOGGED_IN_USER_ID))
+			router.Get("/{id}", ehandlertransaction.GetTransactionByID(a.logger, a.storage, LOGGED_IN_USER_ID))
+			router.Put("/{id}", ehandlertransaction.UpdateTransaction(a.logger, a.storage, LOGGED_IN_USER_ID))
+			router.Delete("/{id}", ehandlertransaction.DeleteTransaction(a.logger, a.storage, LOGGED_IN_USER_ID))
 		})
 
 	})

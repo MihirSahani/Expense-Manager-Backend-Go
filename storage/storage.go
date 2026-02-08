@@ -8,6 +8,7 @@ import (
 	"github.com/krakn/expense-management-backend-go/storage/postgres/user"
 	"github.com/krakn/expense-management-backend-go/storage/postgres/category"
 	"github.com/krakn/expense-management-backend-go/storage/postgres/account"
+	"github.com/krakn/expense-management-backend-go/storage/postgres/transaction"
 	"github.com/krakn/expense-management-backend-go/storage/postgres"
 )
 
@@ -40,6 +41,14 @@ type Storage struct {
 		UpdateAccount(context.Context, *sql.Tx, *entity.Account, int64) error
 		DeleteAccount(context.Context, *sql.Tx, int64, int64) error
 	}
+
+	Transaction interface {
+		CreateTransaction(ctx context.Context, tx *sql.Tx, t *entity.Transaction) (int64, error)
+		GetTransactionByID(ctx context.Context, tx *sql.Tx, id int64, userId int64) (*entity.Transaction, error)
+		GetAllTransactions(ctx context.Context, tx *sql.Tx, userId int64) ([]*entity.Transaction, error)
+		UpdateTransaction(ctx context.Context, tx *sql.Tx, t *entity.Transaction) error
+		DeleteTransaction(ctx context.Context, tx *sql.Tx, id int64, userId int64) error
+	}
 }
 
 func NewStorage() *Storage {
@@ -53,6 +62,7 @@ func NewStorage() *Storage {
 		User:       postgres_user.NewPostgresUserStorage(),
 		Category:   postgres_category.NewPostgresCategoryStorage(),
 		Account:    postgres_account.NewPostgresAccountStorage(),
+		Transaction: postgres_transaction.NewPostgresTransactionStorage(),
 	}
 }
 
