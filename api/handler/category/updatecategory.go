@@ -2,7 +2,6 @@ package category
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 	"strconv"
 
@@ -11,11 +10,12 @@ import (
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/internal/validate"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 	"go.uber.org/zap"
 )
 
-func UpdateCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
+func UpdateCategory(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// get category id from URL
 		categoryId, err := strconv.ParseInt(chi.URLParam(r, "categoryid"), 10, 64)
@@ -47,8 +47,8 @@ func UpdateCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_U
 		logger.Debug("Payload validated")
 
 		// Read from DB
-		data, err := storage.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			category, err := storage.Category.GetCategoryByID(ctx, tx, categoryId, ctx.Value(LOGGED_IN_USER).(int64))
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
+			category, err := s.Category.GetCategoryByID(ctx, tx, categoryId, ctx.Value(LOGGED_IN_USER).(int64))
 			if err != nil {
 				return nil, err
 			}
@@ -64,7 +64,7 @@ func UpdateCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_U
 			if payload.Color != nil {
 				category.Color = *payload.Color
 			}
-			return category, storage.Category.UpdateCategory(ctx, tx, category, ctx.Value(LOGGED_IN_USER).(int64))
+			return category, s.Category.UpdateCategory(ctx, tx, category, ctx.Value(LOGGED_IN_USER).(int64))
 		})
 		if err != nil {
 			logger.Warn(err.Error())

@@ -3,9 +3,11 @@ package postgres_user
 import (
 	"context"
 	"database/sql"
+
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 )
 
-func (p *PostgresUserStorage) DeleteUser(ctx context.Context, tx *sql.Tx, id int64) error {
+func (p *PostgresUserStorage) DeleteUser(ctx context.Context, tx datastore.Database, id int64) error {
 	query := `
 		DELETE FROM users
 		WHERE id = $1

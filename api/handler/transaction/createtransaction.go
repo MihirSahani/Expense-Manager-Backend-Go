@@ -2,13 +2,13 @@ package transaction
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/internal/validate"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 	"go.uber.org/zap"
 )
@@ -59,7 +59,7 @@ func CreateTransaction(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER
 			transactionDate = *payload.TransactionDate
 		}
 
-		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
 			return s.Transaction.CreateTransaction(ctx, tx, &entity.Transaction{
 				UserID:          ctx.Value(LOGGED_IN_USER).(int64),
 				AccountID:       *payload.AccountID,

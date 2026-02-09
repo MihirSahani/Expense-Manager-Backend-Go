@@ -2,12 +2,12 @@ package postgres_transaction
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (s *PostgresTransactionStorage) GetTransactionByID(ctx context.Context, tx *sql.Tx, id int64, userId int64) (*entity.Transaction, error) {
+func (s *PostgresTransactionStorage) GetTransactionByID(ctx context.Context, tx datastore.Database, id int64, userId int64) (*entity.Transaction, error) {
 	query := `
 		SELECT 
 			id, user_id, account_id, category_id, type, amount, payee, currency, 
@@ -26,7 +26,7 @@ func (s *PostgresTransactionStorage) GetTransactionByID(ctx context.Context, tx 
 	return &t, nil
 }
 
-func (s *PostgresTransactionStorage) GetAllTransactions(ctx context.Context, tx *sql.Tx, userId int64) ([]*entity.Transaction, error) {
+func (s *PostgresTransactionStorage) GetAllTransactions(ctx context.Context, tx datastore.Database, userId int64) ([]*entity.Transaction, error) {
 	query := `
 		SELECT 
 			id, user_id, account_id, category_id, type, amount, payee, currency, 

@@ -11,6 +11,7 @@ import (
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/internal/validate"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 	"go.uber.org/zap"
 )
@@ -49,7 +50,7 @@ func UpdateTransaction(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER
 			return
 		}
 
-		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
 			t, err := s.Transaction.GetTransactionByID(ctx, tx, id, ctx.Value(LOGGED_IN_USER).(int64))
 			if err != nil {
 				return nil, err

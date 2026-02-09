@@ -2,12 +2,12 @@ package postgres_account
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (s *PostgresAccountStorage) UpdateAccount(ctx context.Context, tx *sql.Tx, acc *entity.Account, userId int64) error {
+func (s *PostgresAccountStorage) UpdateAccount(ctx context.Context, tx datastore.Database, acc *entity.Account, userId int64) error {
 	query := `
 		UPDATE 
 			accounts

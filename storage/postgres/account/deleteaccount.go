@@ -2,10 +2,11 @@ package postgres_account
 
 import (
 	"context"
-	"database/sql"
+
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 )
 
-func (s *PostgresAccountStorage) DeleteAccount(ctx context.Context, tx *sql.Tx, id int64, userId int64) error {
+func (s *PostgresAccountStorage) DeleteAccount(ctx context.Context, tx datastore.Database, id int64, userId int64) error {
 	query := `
 		DELETE FROM 
 			accounts 

@@ -2,7 +2,6 @@ package ehandleruser
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 	"strconv"
 
@@ -10,6 +9,7 @@ import (
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 	"go.uber.org/zap"
 )
@@ -31,7 +31,7 @@ func GetuserByID(logger elogger.Logger, s *storage.Storage) http.HandlerFunc {
 		logger.Debug("Fetched user id from URL", zap.Int64("id", userId))
 
 		// read from database
-		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
 			return s.User.GetUserByID(ctx, tx, userId)
 		})
 

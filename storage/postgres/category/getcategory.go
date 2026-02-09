@@ -2,12 +2,12 @@ package postgres_category
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (p *PostgresCategoryStorage) GetCategoryByID(ctx context.Context, tx *sql.Tx, categoryID int64, userID int64) (*entity.Category, error) {
+func (p *PostgresCategoryStorage) GetCategoryByID(ctx context.Context, tx datastore.Database, categoryID int64, userID int64) (*entity.Category, error) {
 	query := `
 		SELECT id, name, type, color, description, user_id, created_at, updated_at
 		FROM categories
@@ -21,7 +21,7 @@ func (p *PostgresCategoryStorage) GetCategoryByID(ctx context.Context, tx *sql.T
 	return &category, nil
 }
 
-func (p *PostgresCategoryStorage) GetAllCategories(ctx context.Context, tx *sql.Tx, userID int64) (*[]entity.Category, error) {
+func (p *PostgresCategoryStorage) GetAllCategories(ctx context.Context, tx datastore.Database, userID int64) (*[]entity.Category, error) {
 	query := `
 		SELECT id, name, type, color, description, user_id, created_at, updated_at
 		FROM categories

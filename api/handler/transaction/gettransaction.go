@@ -10,11 +10,12 @@ import (
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 )
 
 func GetAllTransactions(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
 			return s.Transaction.GetAllTransactions(ctx, tx, ctx.Value(LOGGED_IN_USER).(int64))
 		})
 		if err != nil {
@@ -35,7 +36,7 @@ func GetTransactionByID(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USE
 			return
 		}
 
-		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
 			return s.Transaction.GetTransactionByID(ctx, tx, id, ctx.Value(LOGGED_IN_USER).(int64))
 		})
 		if err != nil {

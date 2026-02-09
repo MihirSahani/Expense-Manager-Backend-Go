@@ -38,7 +38,7 @@ func NewPostgresConnection(config *PostgresConfig) (*PostgresConnection, error) 
 	}, nil
 }
 
-func CreateConfiguredPostgresStorage() (*PostgresConnection, error) {
+func CreateConfiguredPostgresConnection() (*PostgresConnection, error) {
 	return NewPostgresConnection(LoadPostgresConfig())
 }
 

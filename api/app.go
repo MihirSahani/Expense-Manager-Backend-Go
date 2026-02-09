@@ -18,11 +18,16 @@ type application struct {
 }
 
 func NewApplication(config *ApplicationServerConfig) *application {
+	s, err := storage.NewStorage()
+	if err != nil {
+		panic(err)
+	}
+
 	app := &application{
 		config:        config,
 		logger:        elogger.NewLogger(),
 		authenticator: ejwt.NewJWTAuthenticator(),
-		storage:       storage.NewStorage(),
+		storage:       s,
 	}
 
 	return app
@@ -47,5 +52,3 @@ func (a *application) Run() {
 		panic(err)
 	}
 }
-
-

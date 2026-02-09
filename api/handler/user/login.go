@@ -2,7 +2,6 @@ package ehandleruser
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
@@ -10,6 +9,7 @@ import (
 	"github.com/krakn/expense-management-backend-go/internal/authenticator"
 	"github.com/krakn/expense-management-backend-go/internal/validate"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -34,7 +34,7 @@ func Login(logger elogger.Logger, s *storage.Storage, a authenticator.Authentica
 		}
 		logger.Debug("Validation of payload passed")
 
-		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
 			user, err := s.User.GetUserByEmail(ctx, tx, payload.Email)
 			if err != nil {
 				return nil, err

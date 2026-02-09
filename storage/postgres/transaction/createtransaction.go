@@ -2,12 +2,12 @@ package postgres_transaction
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (s *PostgresTransactionStorage) CreateTransaction(ctx context.Context, tx *sql.Tx, t *entity.Transaction) (int64, error) {
+func (s *PostgresTransactionStorage) CreateTransaction(ctx context.Context, tx datastore.Database, t *entity.Transaction) (int64, error) {
 	query := `
 		INSERT INTO transactions (
 			user_id, account_id, category_id, type, amount, payee, currency, 

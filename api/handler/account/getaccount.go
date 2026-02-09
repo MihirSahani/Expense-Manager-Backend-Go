@@ -10,13 +10,14 @@ import (
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 )
 
 func GetAllAccounts(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := r.Context().Value(LOGGED_IN_USER).(int64)
 
-		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
 			return s.Account.GetAllAccounts(ctx, tx, userID)
 		})
 
@@ -41,7 +42,7 @@ func GetAccountByID(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER st
 
 		userId := r.Context().Value(LOGGED_IN_USER).(int64)
 
-		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
 			return s.Account.GetAccountByID(ctx, tx, id, userId)
 		})
 

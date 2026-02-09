@@ -2,12 +2,12 @@ package postgres_transaction
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (s *PostgresTransactionStorage) UpdateTransaction(ctx context.Context, tx *sql.Tx, t *entity.Transaction) error {
+func (s *PostgresTransactionStorage) UpdateTransaction(ctx context.Context, tx datastore.Database, t *entity.Transaction) error {
 	query := `
 		UPDATE transactions
 		SET 

@@ -2,12 +2,12 @@ package postgres_account
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (s *PostgresAccountStorage) CreateAccount(ctx context.Context, tx *sql.Tx, acc *entity.Account) (int64, error) {
+func (s *PostgresAccountStorage) CreateAccount(ctx context.Context, tx datastore.Database, acc *entity.Account) (int64, error) {
 	query := `
 		INSERT INTO 
 			accounts (name, type, currency, current_balance, bank_name, account_number, is_included_in_total, user_id, is_active)

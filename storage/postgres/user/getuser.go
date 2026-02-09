@@ -2,12 +2,12 @@ package postgres_user
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (p *PostgresUserStorage) GetUserByEmail(ctx context.Context, tx *sql.Tx, email string) (entity.User, error) {
+func (p *PostgresUserStorage) GetUserByEmail(ctx context.Context, tx datastore.Database, email string) (entity.User, error) {
 	query := `
 		SELECT id, first_name, last_name, email, password, created_at, updated_at
 		FROM users
@@ -23,7 +23,7 @@ func (p *PostgresUserStorage) GetUserByEmail(ctx context.Context, tx *sql.Tx, em
 	return user, nil
 }
 
-func (p *PostgresUserStorage) GetUserByID(ctx context.Context, tx *sql.Tx, id int64) (entity.User, error) {
+func (p *PostgresUserStorage) GetUserByID(ctx context.Context, tx datastore.Database, id int64) (entity.User, error) {
 	query := `
 		SELECT id, first_name, last_name, email, password, created_at, updated_at
 		FROM users

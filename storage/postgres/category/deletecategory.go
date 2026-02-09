@@ -3,9 +3,11 @@ package postgres_category
 import (
 	"context"
 	"database/sql"
+
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 )
 
-func (p *PostgresCategoryStorage) DeleteCategory(ctx context.Context, tx *sql.Tx, categoryID int64, userID int64) error {
+func (p *PostgresCategoryStorage) DeleteCategory(ctx context.Context, tx datastore.Database, categoryID int64, userID int64) error {
 	query := `
 		DELETE FROM categories
 		WHERE id = $1 AND user_id = $2

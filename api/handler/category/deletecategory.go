@@ -9,9 +9,10 @@ import (
 	"github.com/go-chi/chi"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 )
 
-func DeleteCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
+func DeleteCategory(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// get Id from URL
 		categoryId, err := strconv.ParseInt(chi.URLParam(r, "categoryid"), 10, 64)
@@ -23,19 +24,19 @@ func DeleteCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_U
 		logger.Debug("Read category Id from URL")
 
 		// delete from Db
-		_, err = storage.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			return nil, storage.Category.DeleteCategory(ctx, tx, categoryId, ctx.Value(LOGGED_IN_USER).(int64))
+		_, err = s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
+			return nil, s.Category.DeleteCategory(ctx, tx, categoryId, ctx.Value(LOGGED_IN_USER).(int64))
 		})
 		if err != nil {
 			switch err {
-				case sql.ErrNoRows:
-					logger.Warn(err.Error())
-					w.WriteHeader(http.StatusNotFound)
-					return
-				default:
-					logger.Warn(err.Error())
-					w.WriteHeader(http.StatusInternalServerError)
-					return
+			case sql.ErrNoRows:
+				logger.Warn(err.Error())
+				w.WriteHeader(http.StatusNotFound)
+				return
+			default:
+				logger.Warn(err.Error())
+				w.WriteHeader(http.StatusInternalServerError)
+				return
 			}
 		}
 		logger.Debug("Delete from database")

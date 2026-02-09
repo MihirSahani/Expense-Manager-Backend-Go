@@ -2,18 +2,18 @@ package category
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/internal/validate"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 	"go.uber.org/zap"
 )
 
-func CreateCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
+func CreateCategory(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Read payload
 		var payload struct {
@@ -38,8 +38,8 @@ func CreateCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_U
 		logger.Debug("Payload validated")
 
 		// Write to DB
-		data, err := storage.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			return storage.Category.CreateCategory(ctx, tx, &entity.Category{
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
+			return s.Category.CreateCategory(ctx, tx, &entity.Category{
 				Name:   *payload.Name,
 				Desc:   *payload.Desc,
 				Type:   *payload.Type,

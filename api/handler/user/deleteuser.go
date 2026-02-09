@@ -2,13 +2,13 @@ package ehandleruser
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"go.uber.org/zap"
 )
 
@@ -32,7 +32,7 @@ func DeleteUser(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string
 		logger.Debug("User is authorized to delete this user")
 
 		// delete the user
-		_, err = s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
+		_, err = s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
 			return nil, s.User.DeleteUser(ctx, tx, userId)
 		})
 		if err != nil {

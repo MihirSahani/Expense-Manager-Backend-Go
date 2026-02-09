@@ -2,12 +2,12 @@ package postgres_account
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (s *PostgresAccountStorage) GetAccountByID(ctx context.Context, tx *sql.Tx, id int64, userId int64) (*entity.Account, error) {
+func (s *PostgresAccountStorage) GetAccountByID(ctx context.Context, tx datastore.Database, id int64, userId int64) (*entity.Account, error) {
 	query := `
 		SELECT 
 			id, 
@@ -48,7 +48,7 @@ func (s *PostgresAccountStorage) GetAccountByID(ctx context.Context, tx *sql.Tx,
 	return &acc, nil
 }
 
-func (s *PostgresAccountStorage) GetAllAccounts(ctx context.Context, tx *sql.Tx, userID int64) (*[]entity.Account, error) {
+func (s *PostgresAccountStorage) GetAllAccounts(ctx context.Context, tx datastore.Database, userID int64) (*[]entity.Account, error) {
 	query := `
 		SELECT 
 			id, 

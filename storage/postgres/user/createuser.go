@@ -2,12 +2,12 @@ package postgres_user
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (p *PostgresUserStorage) CreateUser(ctx context.Context, tx *sql.Tx, user entity.User) (int64, error) {
+func (p *PostgresUserStorage) CreateUser(ctx context.Context, tx datastore.Database, user entity.User) (int64, error) {
 	query := `
 		INSERT INTO users (first_name, last_name, email, password)
 		VALUES ($1, $2, $3, $4)

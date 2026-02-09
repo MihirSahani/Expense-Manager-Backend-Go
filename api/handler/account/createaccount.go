@@ -2,18 +2,18 @@ package account
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/internal/validate"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 	"go.uber.org/zap"
 )
 
-func CreateAccount(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
+func CreateAccount(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var payload struct {
 			Name              *string  `json:"name" validate:"required,min=3,max=100"`
@@ -56,8 +56,8 @@ func CreateAccount(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_US
 			accountNumber = *payload.AccountNumber
 		}
 
-		data, err := storage.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			return storage.Account.CreateAccount(ctx, tx, &entity.Account{
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
+			return s.Account.CreateAccount(ctx, tx, &entity.Account{
 				Name:              *payload.Name,
 				Type:              *payload.Type,
 				Currency:          *payload.Currency,

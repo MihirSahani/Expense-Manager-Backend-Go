@@ -2,12 +2,12 @@ package postgres_category
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
-func (p *PostgresCategoryStorage) CreateCategory(ctx context.Context, tx *sql.Tx, category *entity.Category) (int64, error) {
+func (p *PostgresCategoryStorage) CreateCategory(ctx context.Context, tx datastore.Database, category *entity.Category) (int64, error) {
 	query := `
 		INSERT INTO categories (name, type, color, description, user_id)
 		VALUES ($1, $2, $3, $4, $5)

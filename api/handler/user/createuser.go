@@ -2,13 +2,13 @@ package ehandleruser
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/internal/validate"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
@@ -38,7 +38,6 @@ func CreateUser(logger elogger.Logger, s *storage.Storage) http.HandlerFunc {
 		}
 		logger.Debug("Validation of payload passed")
 
-
 		// hash the password
 		hashedPassword, err := hashPassword([]byte(payload.Password))
 		if err != nil {
@@ -50,7 +49,7 @@ func CreateUser(logger elogger.Logger, s *storage.Storage) http.HandlerFunc {
 		logger.Debug("Password hashed")
 
 		// create the user
-		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
 			return s.User.CreateUser(ctx, tx, entity.User{
 				Email:     payload.Email,
 				FirstName: payload.FirstName,
@@ -64,7 +63,6 @@ func CreateUser(logger elogger.Logger, s *storage.Storage) http.HandlerFunc {
 			return
 		}
 		logger.Debug("User created")
-
 
 		// return the user
 		ehandler.WriteJSON(w, http.StatusCreated, map[string]int64{

@@ -2,13 +2,13 @@ package ehandleruser
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 
 	ehandler "github.com/krakn/expense-management-backend-go/api/handler"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/internal/validate"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 	"github.com/krakn/expense-management-backend-go/storage/entity"
 )
 
@@ -28,7 +28,7 @@ func UpdateUser(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string
 			return
 		}
 		logger.Debug("Fetched from user details from payload")
-		
+
 		// validate the payload
 		err = validate.Validate.Struct(payload)
 		if err != nil {
@@ -52,7 +52,7 @@ func UpdateUser(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string
 		logger.Debug("Password hashed")
 
 		// update the user
-		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, x *sql.Tx) (any, error) {
+		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, x datastore.Database) (any, error) {
 			user, err := s.User.GetUserByID(ctx, x, ctx.Value(LOGGED_IN_USER).(int64))
 			if err != nil {
 				return nil, err
@@ -78,7 +78,7 @@ func UpdateUser(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string
 			return
 		}
 		logger.Debug("User updated")
-		
+
 		// return the user
 		ehandler.WriteJSON(w, http.StatusOK, data.(entity.User))
 	})

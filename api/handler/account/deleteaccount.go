@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi"
 	elogger "github.com/krakn/expense-management-backend-go/api/logger"
 	"github.com/krakn/expense-management-backend-go/storage"
+	"github.com/krakn/expense-management-backend-go/storage/datastore"
 )
 
 func DeleteAccount(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string) http.HandlerFunc {
@@ -22,7 +23,7 @@ func DeleteAccount(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER str
 
 		userID := r.Context().Value(LOGGED_IN_USER).(int64)
 
-		_, err = s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
+		_, err = s.WithTransaction(r.Context(), func(ctx context.Context, tx datastore.Database) (any, error) {
 			return nil, s.Account.DeleteAccount(ctx, tx, id, userID)
 		})
 
