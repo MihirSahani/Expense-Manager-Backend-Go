@@ -17,11 +17,7 @@ func GetAllCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_U
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Read from DB
 		data, err := storage.WithTransaction(r.Context(), func(ctx context.Context, db *sql.Tx) (any, error) {
-			categories, err := storage.Category.GetAllCategories(ctx, db, ctx.Value(LOGGED_IN_USER).(int64))
-			if err != nil {
-				return nil, err
-			}
-			return categories, nil
+			return storage.Category.GetAllCategories(ctx, db, ctx.Value(LOGGED_IN_USER).(int64))
 		})
 		if err != nil {
 			logger.Warn(err.Error())
@@ -47,11 +43,7 @@ func GetCategoryByID(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_
 
 		// Read from DB
 		data, err := storage.WithTransaction(r.Context(), func(ctx context.Context, db *sql.Tx) (any, error) {
-			category, err := storage.Category.GetCategoryByID(ctx, db, categoryId, ctx.Value(LOGGED_IN_USER).(int64))
-			if err != nil {
-				return nil, err
-			}
-			return category, nil
+			return storage.Category.GetCategoryByID(ctx, db, categoryId, ctx.Value(LOGGED_IN_USER).(int64))
 		})
 		if err != nil {
 			logger.Error(err.Error())

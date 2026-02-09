@@ -42,14 +42,7 @@ func GetAccountByID(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER st
 		userId := r.Context().Value(LOGGED_IN_USER).(int64)
 
 		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			acc, err := s.Account.GetAccountByID(ctx, tx, id, userId)
-			if err != nil {
-				return nil, err
-			}
-			if acc.UserID != userId {
-				return nil, sql.ErrNoRows
-			}
-			return acc, nil
+			return s.Account.GetAccountByID(ctx, tx, id, userId)
 		})
 
 		if err != nil {

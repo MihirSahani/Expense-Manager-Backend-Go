@@ -33,11 +33,7 @@ func DeleteUser(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string
 
 		// delete the user
 		_, err = s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			err := s.User.DeleteUser(ctx, tx, userId)
-			if err != nil {
-				return nil, err
-			}
-			return userId, nil
+			return nil, s.User.DeleteUser(ctx, tx, userId)
 		})
 		if err != nil {
 			logger.Error(err.Error())

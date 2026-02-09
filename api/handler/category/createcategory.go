@@ -39,17 +39,13 @@ func CreateCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_U
 
 		// Write to DB
 		data, err := storage.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			id, err := storage.Category.CreateCategory(ctx, tx, &entity.Category{
+			return storage.Category.CreateCategory(ctx, tx, &entity.Category{
 				Name:   *payload.Name,
 				Desc:   *payload.Desc,
 				Type:   *payload.Type,
 				Color:  *payload.Color,
 				UserID: ctx.Value(LOGGED_IN_USER).(int64),
 			})
-			if err != nil {
-				return nil, err
-			}
-			return id, nil
 		})
 		if err != nil {
 			logger.Error(err.Error())

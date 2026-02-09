@@ -40,12 +40,7 @@ func Login(logger elogger.Logger, s *storage.Storage, a authenticator.Authentica
 				return nil, err
 			}
 
-			err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(payload.Password))
-			if err != nil {
-				return nil, err
-			}
-
-			return user, nil
+			return user, bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(payload.Password))
 		})
 		if err != nil {
 			logger.Warn(err.Error())

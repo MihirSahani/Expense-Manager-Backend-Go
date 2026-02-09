@@ -23,14 +23,6 @@ func DeleteAccount(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER str
 		userID := r.Context().Value(LOGGED_IN_USER).(int64)
 
 		_, err = s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			existing, err := s.Account.GetAccountByID(ctx, tx, id, userID)
-			if err != nil {
-				return nil, err
-			}
-			if existing.UserID != userID {
-				return nil, sql.ErrNoRows
-			}
-
 			return nil, s.Account.DeleteAccount(ctx, tx, id, userID)
 		})
 

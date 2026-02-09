@@ -51,16 +51,12 @@ func CreateUser(logger elogger.Logger, s *storage.Storage) http.HandlerFunc {
 
 		// create the user
 		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			userId, err := s.User.CreateUser(ctx, tx, entity.User{
+			return s.User.CreateUser(ctx, tx, entity.User{
 				Email:     payload.Email,
 				FirstName: payload.FirstName,
 				LastName:  payload.LastName,
 				Password:  payload.Password,
 			})
-			if err != nil {
-				return nil, err
-			}
-			return userId, nil
 		})
 		if err != nil {
 			logger.Error(err.Error())

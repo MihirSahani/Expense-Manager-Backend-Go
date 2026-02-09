@@ -57,7 +57,7 @@ func CreateAccount(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_US
 		}
 
 		data, err := storage.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			id, err := storage.Account.CreateAccount(ctx, tx, &entity.Account{
+			return storage.Account.CreateAccount(ctx, tx, &entity.Account{
 				Name:              *payload.Name,
 				Type:              *payload.Type,
 				Currency:          *payload.Currency,
@@ -68,7 +68,6 @@ func CreateAccount(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_US
 				UserID:            r.Context().Value(LOGGED_IN_USER).(int64),
 				IsActive:          isActive,
 			})
-			return id, err
 		})
 
 		if err != nil {

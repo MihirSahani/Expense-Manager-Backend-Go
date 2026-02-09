@@ -70,11 +70,7 @@ func UpdateUser(logger elogger.Logger, s *storage.Storage, LOGGED_IN_USER string
 				user.Password = *payload.Password
 			}
 
-			err = s.User.UpdateUser(ctx, x, user)
-			if err != nil {
-				return nil, err
-			}
-			return user, nil
+			return user, s.User.UpdateUser(ctx, x, user)
 		})
 		if err != nil {
 			logger.Error(err.Error())

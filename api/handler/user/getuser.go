@@ -32,11 +32,7 @@ func GetuserByID(logger elogger.Logger, s *storage.Storage) http.HandlerFunc {
 
 		// read from database
 		data, err := s.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			user, err := s.User.GetUserByID(ctx, tx, userId)
-			if err != nil {
-				return nil, err
-			}
-			return user, nil
+			return s.User.GetUserByID(ctx, tx, userId)
 		})
 
 		if err != nil {

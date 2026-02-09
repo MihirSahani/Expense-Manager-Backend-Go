@@ -24,11 +24,7 @@ func DeleteCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_U
 
 		// delete from Db
 		_, err = storage.WithTransaction(r.Context(), func(ctx context.Context, tx *sql.Tx) (any, error) {
-			err := storage.Category.DeleteCategory(ctx, tx, categoryId, ctx.Value(LOGGED_IN_USER).(int64))
-			if err != nil {
-				return nil, err
-			}
-			return nil, nil
+			return nil, storage.Category.DeleteCategory(ctx, tx, categoryId, ctx.Value(LOGGED_IN_USER).(int64))
 		})
 		if err != nil {
 			switch err {

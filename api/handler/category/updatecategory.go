@@ -64,11 +64,7 @@ func UpdateCategory(logger elogger.Logger, storage *storage.Storage, LOGGED_IN_U
 			if payload.Color != nil {
 				category.Color = *payload.Color
 			}
-			err = storage.Category.UpdateCategory(ctx, tx, category, ctx.Value(LOGGED_IN_USER).(int64))
-			if err != nil {
-				return nil, err
-			}
-			return category, nil
+			return category, storage.Category.UpdateCategory(ctx, tx, category, ctx.Value(LOGGED_IN_USER).(int64))
 		})
 		if err != nil {
 			logger.Warn(err.Error())
