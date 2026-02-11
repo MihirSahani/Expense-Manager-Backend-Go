@@ -43,6 +43,11 @@ type Transaction interface {
 	GetAllTransactions(context.Context, datastore.Database, int64) ([]*entity.Transaction, error)
 	UpdateTransaction(context.Context, datastore.Database, *entity.Transaction) error
 	DeleteTransaction(context.Context, datastore.Database, int64, int64) error
+
+	GetTransactionsByMonth(context.Context, datastore.Database, int64, int64, int64) ([]*entity.Transaction, error)
+	GetTransactionsByCategory(context.Context, datastore.Database, int64, int64) ([]*entity.Transaction, error)
+	GetTransactionsPaginated(context.Context, datastore.Database, int64, int64, int64) ([]*entity.Transaction, error)
+	GetTransactionCount(context.Context, datastore.Database, int64) (int64, error)
 }
 
 type Storage struct {

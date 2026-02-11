@@ -23,6 +23,8 @@ func Authenticate(authenticator authenticator.Authenticator, logger elogger.Logg
 			userId, err := authenticator.ValidateToken(token)
 			if err != nil {
 				logger.Error(err.Error())
+				w.WriteHeader(http.StatusBadRequest)
+				return
 			}
 
 			ctx := context.WithValue(r.Context(), LOGGED_IN_USER_ID, userId)

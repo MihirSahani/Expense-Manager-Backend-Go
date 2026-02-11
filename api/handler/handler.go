@@ -20,8 +20,6 @@ func WriteJSON(w http.ResponseWriter, status int, data any) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	_, err = w.Write(output)
-	if err != nil {
-		return err
-	}
-	return nil
+
+	return err 
 }

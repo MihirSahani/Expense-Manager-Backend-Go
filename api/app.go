@@ -52,3 +52,8 @@ func (a *application) Run() {
 		panic(err)
 	}
 }
+
+func (a *application) Close() {
+	a.logger.Info("Closing application")
+	a.storage.Close()
+}
